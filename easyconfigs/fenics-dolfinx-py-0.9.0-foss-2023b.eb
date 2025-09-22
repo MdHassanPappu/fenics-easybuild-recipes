@@ -1,10 +1,10 @@
-easyblock = 'PythonPackage'  
+easyblock = 'PythonPackage'
 
-name = 'fenics-dolfinx-py'
+name = 'fenics-dolfinx-python'
 version = '0.9.0'
 
 homepage = 'https://github.com/FEniCS/dolfinx'
-description = "DOLFINx is the computational environment of FEniCSx - python binding "
+description = "DOLFINx is the computational environment of FEniCSx - Python binding "
 
 toolchain = {'name': 'foss', 'version': '2023b'}
 
@@ -13,14 +13,14 @@ sources = ['v%(version)s.tar.gz']
 checksums = ['b266c74360c2590c5745d74768c04568c965b44739becca4cd6b5aa58cdbbbd1']
 
 builddependencies = [
+    ('make', '4.4.1'),
     ('CMake', '3.27.6'),
     ('HDF5', '1.14.3'),
     ('fenics-dolfinx', '%(version)s'),
-    ('make', '4.4.1'),
     ('nanobind', '2.5.0'),
-    ('pkgconfig', '1.5.5','-python'),
+    ('pkgconfig', '1.5.5', '-python'),
     ('scikit-build-core', '0.10.7'),
-    ('setuptools', '64.0.3'),  
+    ('setuptools', '80.9.0'),
 ]
 
 dependencies = [
@@ -28,27 +28,35 @@ dependencies = [
     ('Python', '3.11.5'),
     ('SciPy-bundle','2023.11'),
     ('cffi', '1.15.1'),
-    ('fenics-basix', '0.9.0'),
-    ('fenics-basix-py', '0.9.0'),
+    ('fenics-basix-python', '0.9.0'),
     ('fenics-ffcx', '0.9.0'),
     ('fenics-ufl', '2024.2.0'),
     ('mpi4py', '3.1.5'),
-    ('petsc4py','3.22.5'), 
-    ('slepc4py','3.22.2'), 
+    ('petsc4py', '3.22.5'),
+    ('slepc4py', '3.22.2'),
 ]
 
 install_src = './python'
 
-options = {'modulename': 'dolfinx'}
+# Disable built-in check for module extension:
+#
+# python -c "import dolfinx"
+#
+# The module extension provides the dolfinx Python package that is tested by the sanity check.
+#
+# See v5.1.1: easybuild-framework/easybuild/framework/extension.py:313
+#
+# Disable import sanity check for dolfinx, since we need to import MPI from mpi4py first
+#
+options = {'modulename': False}
 
 sanity_check_paths = {
     'files': ['lib/python%(pyshortver)s/site-packages/dolfinx/__init__.py'],
-    'dirs': ['lib/python%(pyshortver)s/site-packages/dolfinx'],
+    'dirs': [],
 }
 
-
 sanity_check_commands = [
-    'mpirun -N 1 python -c "from mpi4py import MPI; import dolfinx"'
+    'mpiexec -N 1 python -c "from mpi4py import MPI; import dolfinx"',
 ]
 
 moduleclass = 'cae'

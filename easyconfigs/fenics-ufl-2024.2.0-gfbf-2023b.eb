@@ -1,6 +1,6 @@
-easyblock = 'PythonPackage'  
+easyblock = 'PythonPackage'
 
-name = 'fenics-ufl' 
+name = 'fenics-ufl'
 version = '2024.2.0'
 
 homepage = "https://github.com/FEniCS/ufl"
@@ -18,8 +18,8 @@ dependencies = [
 ]
 
 sanity_check_paths = {
-    'files': ['lib/python%(pyshortver)s//site-packages/ufl/__init__.py'],
-    'dirs': ['lib/python%(pyshortver)s/site-packages/ufl'],
+    'files': ['lib/python%(pyshortver)s/site-packages/ufl/__init__.py'],
+    'dirs': [],
 }
 
 options = {'modulename': 'ufl'}
